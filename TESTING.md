@@ -35,9 +35,24 @@ src/utils/validators.js 100.00%    100.00%   100.00%    100.00%
 
 The overall coverage exceeds the assignment's 80% target. Coverage measures executed code, not whether every possible input or bug has been checked.
 
+## Live deployment verification
+
+Checked on 2026-09-29 against `https://priya-task-api.onrender.com` using a temporary test task. The task was deleted after testing.
+
+| Request/check | Observed result |
+| --- | --- |
+| POST `/tasks` with a title and high priority | 201; task created with status `todo` |
+| PATCH `/tasks/:id/assign` with `"  Priya  "` | 200; stored name was `"Priya"` |
+| PATCH `/tasks/:id/assign` with a blank name | 400; validation error |
+| PATCH `/tasks/:id/complete` | 200; `done`, valid completion timestamp, high priority and assignee preserved |
+| DELETE `/tasks/:id` | 204; empty body |
+| Assign the deleted task | 404; `Task not found` |
+
+These live checks supplement the automated suite; they are not an exhaustive test of the deployed service.
+
 ## Remaining checks
 
 - Test combined status filtering and pagination, invalid pagination parameters, falsy status/priority values, and attempts to overwrite server-owned fields.
 - Review malformed JSON and unexpected-error handling. Current tests do not exercise the error middleware or standalone server startup callback.
 - Clarify full-replacement versus partial-update semantics for PUT and timestamp behavior when completing an already completed task.
-- Re-run coverage after subsequent changes and verify the deployed API before submission.
+- Re-run coverage and deployment checks when application code changes.

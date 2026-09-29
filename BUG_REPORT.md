@@ -30,4 +30,4 @@
 - **Fix:** Compare status values with strict equality.
 - **Regression coverage:** Tests cover exact matches, no matches, and partial values. This service-level fix does not introduce HTTP query validation.
 
-The report currently covers three verified bugs. Integration tests and the assignment feature are now in place; see `TESTING.md` for the current coverage snapshot and remaining checks. Deployment and final submission verification are still pending.
+The report covers three test-reproduced and fixed bugs. Integration tests and the assignment feature are in place, and the deployed create/assign/complete/delete flow has been verified. See `TESTING.md` for coverage and live results, and `SUBMISSION_NOTES.md` for remaining review observations and production questions.

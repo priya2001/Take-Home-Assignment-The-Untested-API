@@ -1,5 +1,19 @@
 # Take-Home Assignment — The Untested API
 
+## Submission
+
+- **GitHub:** [priya2001/Take-Home-Assignment-The-Untested-API](https://github.com/priya2001/Take-Home-Assignment-The-Untested-API)
+- **Live API:** [Task list](https://priya-task-api.onrender.com/tasks)
+- **Live statistics:** [Task statistics](https://priya-task-api.onrender.com/tasks/stats)
+- **Results:** 76 passing tests, 97.03% line coverage, three bug fixes, and task assignment with validation and regression tests.
+- **Documentation:** [Bug report](./BUG_REPORT.md), [testing and coverage](./TESTING.md), [submission notes](./SUBMISSION_NOTES.md).
+
+This is a backend API and returns JSON. The root URL `/` has no handler; use `/tasks` to check the running service. Tasks are stored in memory and reset when the process restarts. The Render Free service can sleep when idle, so the first request may take longer.
+
+To use the examples below against the deployment, replace `http://localhost:3000` with `https://priya-task-api.onrender.com`. Replace `<id>` with an actual task ID from a create response.
+
+## Original assignment
+
 A 2-day take-home assignment. You'll read unfamiliar code, write tests, track down bugs, and ship a small feature.
 
 Read **[ASSIGNMENT.md](./ASSIGNMENT.md)** for the full brief before you start.
@@ -61,7 +75,7 @@ ASSIGNMENT.md               # Full brief — read this first
 |----------|---------------------------|------------------------------------------|
 | `GET`    | `/tasks`                  | List all tasks. Supports `?status=`, `?page=`, `?limit=` |
 | `POST`   | `/tasks`                  | Create a new task                        |
-| `PUT`    | `/tasks/:id`              | Full update of a task                    |
+| `PUT`    | `/tasks/:id`              | Update supplied task fields (existing merge behavior) |
 | `DELETE` | `/tasks/:id`              | Delete a task (returns 204)              |
 | `PATCH`  | `/tasks/:id/complete`     | Mark a task as complete                  |
 | `GET`    | `/tasks/stats`            | Counts by status + overdue count         |
@@ -98,7 +112,7 @@ curl "http://localhost:3000/tasks?status=todo"
 
 **Mark complete**
 ```bash
-curl -X PATCH http://localhost:3000/tasks/<id>/complete
+curl -X PATCH "http://localhost:3000/tasks/<id>/complete"
 ```
 
 ---
@@ -108,7 +122,7 @@ curl -X PATCH http://localhost:3000/tasks/<id>/complete
 Replace `<id>` with an ID returned by task creation. If running on port 3001, change the URL accordingly.
 
 ```bash
-curl -X PATCH http://localhost:3000/tasks/<id>/assign \
+curl -X PATCH "http://localhost:3000/tasks/<id>/assign" \
   -H "Content-Type: application/json" \
   -d '{"assignee":"Priya Gautam"}'
 ```
