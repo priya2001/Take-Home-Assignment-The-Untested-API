@@ -75,6 +75,9 @@ const completeTask = (id) => {
   return updated;
 };
 
+// The route validates the name; only the assignee field can change here.
+const assignTask = (id, assignee) => update(id, { assignee: assignee.trim() });
+
 const _reset = () => {
   tasks = [];
 };
@@ -89,5 +92,6 @@ module.exports = {
   update,
   remove,
   completeTask,
+  assignTask,
   _reset,
 };

@@ -65,7 +65,7 @@ ASSIGNMENT.md               # Full brief — read this first
 | `DELETE` | `/tasks/:id`              | Delete a task (returns 204)              |
 | `PATCH`  | `/tasks/:id/complete`     | Mark a task as complete                  |
 | `GET`    | `/tasks/stats`            | Counts by status + overdue count         |
-| `PATCH`  | `/tasks/:id/assign`       | **Assign a task to a user** _(to implement)_ |
+| `PATCH`  | `/tasks/:id/assign`       | Assign or reassign a task to a name |
 
 ### Task shape
 
@@ -74,7 +74,7 @@ ASSIGNMENT.md               # Full brief — read this first
   "id": "uuid",
   "title": "string",
   "description": "string",
-  "status": "pending | in-progress | completed",
+  "status": "todo | in_progress | done",
   "priority": "low | medium | high",
   "dueDate": "ISO 8601 or null",
   "completedAt": "ISO 8601 or null",
@@ -93,7 +93,7 @@ curl -X POST http://localhost:3000/tasks \
 
 **List tasks with filter**
 ```bash
-curl "http://localhost:3000/tasks?status=pending&page=1&limit=10"
+curl "http://localhost:3000/tasks?status=todo"
 ```
 
 **Mark complete**
@@ -102,6 +102,30 @@ curl -X PATCH http://localhost:3000/tasks/<id>/complete
 ```
 
 ---
+
+### Assign a task
+
+Replace `<id>` with an ID returned by task creation. If running on port 3001, change the URL accordingly.
+
+```bash
+curl -X PATCH http://localhost:3000/tasks/<id>/assign \
+  -H "Content-Type: application/json" \
+  -d '{"assignee":"Priya Gautam"}'
+```
+
+The response is the updated task with an `assignee` field. This field is absent until the task is first assigned.
+
+- A non-empty string is required. Leading and trailing whitespace is trimmed; internal spaces are preserved.
+- Missing, blank, or non-string names return `400` without changing the task.
+- Valid requests for missing tasks return `404`. Validation happens before lookup, matching the existing update route; invalid input with a missing ID returns `400`.
+- Reassignment replaces the previous name. Repeating the same name is allowed.
+- Completed tasks can be assigned without changing their status or completion timestamp.
+- Extra request fields are ignored: this endpoint changes only `assignee`.
+- Names are labels, not authenticated user IDs. No user lookup or unassignment behavior was added because neither is specified in the brief.
+
+The route handles input validation and HTTP responses. The service trims the validated name and reuses the existing update function with only the assignee field, preserving the rest of the task.
+
+See [BUG_REPORT.md](./BUG_REPORT.md) for verified fixes and [TESTING.md](./TESTING.md) for tests, coverage, and remaining checks.
 
 ## What to Submit
 
